@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"example.com/mailroom/internal/util/pathsafe"
 )
 
 var ErrMailClass = errors.New("mail class denied")
@@ -127,11 +129,5 @@ func ParsePieceMeta(b []byte) (map[string]string, error) {
 }
 
 func ExportInduction(root, rel string) (string, error) {
-	if strings.TrimSpace(rel) == "" {
-		return "", errors.New("empty induction path")
-	}
-	if filepath.IsAbs(rel) {
-		return "", errors.New("absolute induction path")
-	}
-	return filepath.Join(root, rel), nil
+	return pathsafe.JoinUnder(root, rel)
 }
